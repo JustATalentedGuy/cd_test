@@ -1,0 +1,35 @@
+Run these commands from this folder in a Linux/Ubuntu terminal.
+Required tools: Flex, Bison (yacc), and GCC.
+
+yacc -d parser.y
+lex lexer.l
+gcc y.tab.c lex.yy.c -o compiler
+
+Paste the complete demo command below:
+./compiler <<'EOF'
+while (m < n * 4)
+{
+    r = 16 * 5;
+    s = x * y + z;
+    t = m + s;
+}
+EOF
+
+The output is tokens, syntax status, original TAC, optimized TAC,
+and target code for the same simple teaching machine as the while version.
+This compiler prints code; it does not execute the input program.
+
+For interactive input, run ./compiler, paste the program, then press Ctrl+D.
+The parser accepts one construct, braces and a nonempty assignment list.
+Names use lowercase letters. Expressions support numbers, +, -, *, and
+parentheses. The comparison is <. There are no declarations or nested
+control statements. Fixed arrays are for these short exam inputs.
+
+Code motion uses the same restrictions as the original while example:
+the right-hand bound is unchanged in the body; the condition variable is
+unchanged or updated from its old value at the end. Each variable has at
+most one body assignment, and body-produced values are used after their
+definitions (apart from the counter's own update).
+
+The demo source has no m or n update, so its runtime loop is infinite when
+the initial condition is true. The compile-and-print demo still finishes.

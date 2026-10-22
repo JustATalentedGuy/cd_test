@@ -1,0 +1,50 @@
+Run these commands from this folder in a Linux/Ubuntu terminal.
+Required tools: Flex, Bison (yacc), and GCC.
+
+yacc -d parser.y
+lex lexer.l
+gcc y.tab.c lex.yy.c -o compiler
+
+Paste the complete demo command below:
+./compiler <<'EOF'
+if (m < n * 4)
+{
+    r = 16 * 5;
+    s = x * y + z;
+    t = m + s;
+}
+else
+{
+    r = 0;
+    s = 0;
+    t = 0;
+}
+EOF
+
+The else block is optional. Here is an if-only demo:
+
+./compiler <<'EOF'
+if (m < n)
+{
+    r = x + y;
+}
+EOF
+
+The output is tokens, syntax status, original TAC, optimized TAC,
+and target code for the same simple teaching machine as the while version.
+This compiler prints code; it does not execute the input program.
+
+For interactive input, run ./compiler, paste the program, then press Ctrl+D.
+The parser accepts one construct, braces and a nonempty assignment list.
+Names use lowercase letters. Expressions support numbers, +, -, *, and
+parentheses. The comparison is <. There are no declarations or nested
+control statements. Fixed arrays are for these short exam inputs.
+
+False conditions jump to L2. With else, the true branch jumps to L3 to
+skip the else block. Without else, L2 is simply the exit label.
+There is no loop, so loop code motion does not apply: optimize() copies
+the instructions in order. Body assignments remain conditional.
+
+For m=1, n=2, x=2, y=3, z=4, the first demo produces r=80, s=10, t=11.
+For m=8 and n=2, it takes the else branch and assigns zero to all three.
+The second demo leaves r unchanged when m < n is false.
